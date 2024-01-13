@@ -1,0 +1,129 @@
+Function SUMINWORDS(n As Double, curr As Variant, kop As Variant) As String  
+ 'moonexcel.com.ua   
+ Dim Nums1, Nums2, Nums3, Nums4 As Variant  
+   
+ Nums0 = Array("", "одна ", "дві ", "три ", "чотири ", "п'ять ", "шість ", "сім ", "вісім ", "дев'ять ")  
+ Nums1 = Array("", "один ", "два ", "три ", "чотири ", "п'ять ", "шість ", "сім ", "вісім ", "дев'ять ")  
+ Nums2 = Array("", "десять ", "двадцять ", "тридцять ", "сорок ", "п'ятдесят ", "шістдесят ", "сімдесят ", _  
+                        "вісімдесят ", "дев'яносто ")  
+ Nums3 = Array("", "сто ", "двісті ", "триста ", "чотириста ", "п'ятсот ", "шістсот ", "сімсот ", _  
+                        "вісімсот ", "дев'ятсот ")  
+ Nums4 = Array("", "одна ", "дві ", "три ", "чотири ", "п'ять ", "шість ", "сім ", "вісім ", "дев'ять ")  
+ Nums5 = Array("десять ", "одинадцять ", "дванадцять ", "тринадцять ", "чотирнадцять ", _  
+                        "п'ятнадцять ", "шістнадцять ", "сімнадцять ", "вісімнадцять ", "дев'ятнадцять ")  
+    
+ If n < 1 Then  
+   SUMINWORDS = "Нуль " & curr & " " & Round((n - Fix(n)) * 100) & " " & kop  
+     
+If curr = "" Then  
+   SUMINWORDS = "Нуль"  
+End If  
+        
+   Exit Function  
+ End If  
+ 'розділяємо число на розряди, використовуючи допоміжну функцію Class  
+ ed     = Class(n, 1)  
+ dec    = Class(n, 2)  
+ sot    = Class(n, 3)  
+ tys    = Class(n, 4)  
+ dectys = Class(n, 5)  
+ sottys = Class(n, 6)  
+ mil    = Class(n, 7)  
+ decmil = Class(n, 8)  
+ sotmil = Class(n, 9)  
+ bil    = Class(n, 10)  
+     
+ 'перевіряємо мільярди  
+ Select Case bil  
+    Case 1  
+      bil_txt = Nums1(bil) & "мільярд "  
+    Case 2 To 4  
+      bil_txt = Nums1(bil) & "мільярди "  
+    Case 5 To 9  
+      bil_txt = Nums1(bil) & "мільярдів "  
+ End Select  
+     
+ 'перевіряємо мільйони  
+ Select Case sotmil  
+   Case 1 To 9  
+     sotmil_txt = Nums3(sotmil)  
+ End Select  
+    
+ Select Case decmil  
+   Case 1  
+     mil_txt = Nums5(mil) & "мільйонів "  
+     GoTo www  
+   Case 2 To 9  
+     decmil_txt = Nums2(decmil)  
+ End Select  
+   
+ Select Case mil  
+   Case 0  
+     If decmil > 0 Then mil_txt = Nums4(mil) & "мільйонів "  
+   Case 1  
+     mil_txt = Nums1(mil) & "мільйон "  
+   Case 2, 3, 4  
+     mil_txt = Nums1(mil) & "мільйона "  
+   Case 5 To 9  
+     mil_txt = Nums1(mil) & "мільйонів "  
+ End Select  
+   
+ If decmil = 0 And mil = 0 And sotmil <> 0 Then sotmil_txt = sotmil_txt & "мільйонів "  
+   
+www:  
+ sottys_txt = Nums3(sottys)  
+   
+ 'перевіряємо тисячі  
+ Select Case dectys  
+   Case 1  
+     tys_txt = Nums5(tys) & "тисяч "  
+     GoTo eee  
+   Case 2 To 9  
+     dectys_txt = Nums2(dectys)  
+ End Select  
+   
+ Select Case tys  
+   Case 0  
+     If dectys > 0 Then tys_txt = Nums4(tys) & "тисяч "  
+   Case 1  
+     tys_txt = Nums4(tys) & "тисячa "  
+   Case 2, 3, 4  
+     tys_txt = Nums4(tys) & "тисячі "  
+   Case 5 To 9  
+     tys_txt = Nums4(tys) & "тисяч "  
+ End Select  
+   
+ If dectys = 0 And tys = 0 And sottys <> 0 Then sottys_txt = sottys_txt & " тисяч "  
+   
+eee:  
+ sot_txt = Nums3(sot)  
+   
+ 'перевіряємо десятки  
+ Select Case dec  
+   Case 1  
+     ed_txt = Nums5(ed)  
+     GoTo rrr  
+   Case 2 To 9  
+     dec_txt = Nums2(dec)  
+ End Select  
+    
+ ed_txt = Nums0(ed)  
+  
+rrr:  
+ 'формуємо підсумковий рядок  
+ SUMINWORDS = bil_txt & sotmil_txt & decmil_txt & mil_txt & sottys_txt & dectys_txt _  
+ & tys_txt & sot_txt & dec_txt & ed_txt & curr & " " & Round((n - Fix(n)) * 100) & " " & kop  
+  
+ If curr = "" Then  
+   SUMINWORDS = bil_txt & sotmil_txt & decmil_txt & mil_txt & sottys_txt & dectys_txt _  
+ & tys_txt & sot_txt & dec_txt & ed_txt  
+ End If  
+   
+ SUMINWORDS = UCase(Mid(SUMINWORDS, 1, 1)) + Mid(SUMINWORDS, 2)  
+   
+End Function  
+    
+ 'допоміжна функція для виділення з числа розрядів  
+Private Function Class(M, I)  
+  Class = Int(Int(M - (10 ^ I) * Int(M / (10 ^ I))) / 10 ^ (I - 1))  
+End Function  
